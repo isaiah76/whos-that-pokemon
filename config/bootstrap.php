@@ -1,11 +1,9 @@
 <?php
 
-// load composer autoloader and .env
 require_once __DIR__ . '/../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
-// start session
 if (session_status() === PHP_SESSION_NONE) {
     session_start([
         'cookie_httponly' => true,
@@ -13,10 +11,7 @@ if (session_status() === PHP_SESSION_NONE) {
     ]);
 }
 
-// json header
 header('Content-Type: application/json; charset=utf-8');
-
-// cors
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -26,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// json response
 function jsonResponse(array $data, int $status = 200): void
 {
     http_response_code($status);
@@ -34,7 +28,6 @@ function jsonResponse(array $data, int $status = 200): void
     exit;
 }
 
-// require user to be authenticated
 function requireAuth(): array
 {
     if (empty($_SESSION['user'])) {
@@ -43,7 +36,6 @@ function requireAuth(): array
     return $_SESSION['user'];
 }
 
-// require user to be admin
 function requireAdmin(): array
 {
     $user = requireAuth();
@@ -53,7 +45,6 @@ function requireAdmin(): array
     return $user;
 }
 
-// get json body from request
 function getRequestBody(): array
 {
     $raw = file_get_contents('php://input');
@@ -64,7 +55,6 @@ function getRequestBody(): array
     return is_array($decoded) ? $decoded : [];
 }
 
-// sanitize string inputs
 function sanitize(string $value): string
 {
     return trim(htmlspecialchars($value, ENT_QUOTES, 'UTF-8'));

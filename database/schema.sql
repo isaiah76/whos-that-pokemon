@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash VARCHAR(255) NOT NULL,
     role ENUM('user', 'admin') NOT NULL DEFAULT 'user',
     status ENUM('active', 'disabled') NOT NULL DEFAULT 'active',
+    avatar VARCHAR(64) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_status (status)
 );
@@ -19,18 +20,20 @@ CREATE TABLE IF NOT EXISTS scores (
     correct_guesses INT NOT NULL DEFAULT 0,
     total_guesses INT NOT NULL DEFAULT 0,
     difficulty ENUM('easy', 'normal', 'hard') NOT NULL DEFAULT 'normal',
+    best_streak INT NOT NULL DEFAULT 0,
+    gens VARCHAR(30) NOT NULL DEFAULT '',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_user_id (user_id),
     INDEX idx_score (score),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- admin acc
-INSERT INTO users (username, email, password_hash, role, status)
+INSERT INTO users (username, email, password_hash, role, status, avatar)
 VALUES (
     'admin',
     'admin@test',
     '',
     'admin',
-    'active'
-) ;
+    'active',
+    'meowth.jpg'
+);
